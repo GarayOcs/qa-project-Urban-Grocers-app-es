@@ -12,7 +12,7 @@ Instala requests
 
 # Hola revisor anonimo soy yo :D lamento el error que cometi
 # en la entrega anteriror, si ves mi perfil de github veras que 
-# tengo varios repositorios, bueno empece a jugar mucho con pycharm
+# si viste mi gibhun tenia varios repositorios (Porque ya los borre mejor), bueno empece a jugar mucho con pycharm
 # quise experimentar mas para ver que onda y hacer borradores del proyecto
 # la cosa se resume en te mande mis pruebas autodidactas y no el bueno xddd
 # ya sabia que esto tenia que quedar en 4 - y 5+ por ello cuando dijiste que 
