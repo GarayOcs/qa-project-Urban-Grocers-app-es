@@ -1,59 +1,52 @@
 import sender_stand_request
 import data
-import pytest
+def positive_assert(kit_response, expected_status_code, expected_name):
+    assert kit_response.status_code == expected_status_code
+    assert kit_response.json()["name"] == expected_name
+def negative_assert(kit_response, expected_status_code):
+    assert kit_response.status_code == expected_status_code
 
-@pytest.fixture
-def auth_token():
-    new_user = sender_stand_request.create_count(data.user_body)
-    response_data = new_user.json()
-    if 'authToken' not in response_data:
-        raise Exception(f"Error: 'authToken' no se encontró en la respuesta. Respuesta completa: {response_data}")
-    return response_data['authToken']
+def test_kit_one_char():
+    kit_body = data.kit_bodies["one_char"]
+    kit_response = sender_stand_request.post_new_client_kit(kit_body)
+    positive_assert(kit_response, 201, kit_body['name'])
 
-def positive_assert(kit_body):
-    new_user = sender_stand_request.create_count(data.user_body)
-    token = new_user.json().get('authToken')
-    new_kit = sender_stand_request.create_kit(kit_body, token)
-    assert new_kit.status_code == 201
+def test_kit_max_char():
+    kit_body = data.kit_bodies["max_char"]
+    kit_response = sender_stand_request.post_new_client_kit(kit_body)
+    positive_assert(kit_response, 201, kit_body['name'])
 
-def negative_assert(kit_body):
-    new_user = sender_stand_request.create_count(data.user_body)
-    token = new_user.json().get('authToken')
-    new_kit = sender_stand_request.create_kit(kit_body, token)
-    assert new_kit.status_code == 400
+def test_kit_empty_str():
+    kit_body = data.kit_bodies["empty_str"]
+    kit_response = sender_stand_request.post_new_client_kit(kit_body)
+    negative_assert(kit_response, 400)
 
-def test_create_kit_name_length_1():
-    kit_body = {"name": "a"}
-    positive_assert(kit_body)
+def test_kit_max_char_plus():
+    kit_body = data.kit_bodies["max_char_plus"]
+    kit_response = sender_stand_request.post_new_client_kit(kit_body)
+    negative_assert(kit_response, 400)
 
-def test_create_kit_name_length_511():
-    kit_body = {"name": "Abcd" * 127 + "a"}
-    positive_assert(kit_body)
+def test_kit_esp_char():
+    kit_body = data.kit_bodies["esp_char"]
+    kit_response = sender_stand_request.post_new_client_kit(kit_body)
+    positive_assert(kit_response, 201, kit_body['name'])
 
-def test_create_kit_name_length_0():
-    kit_body = {"name": ""}
-    negative_assert(kit_body)
+def test_kit_space_char():
+    kit_body = data.kit_bodies["space_char"]
+    kit_response = sender_stand_request.post_new_client_kit(kit_body)
+    positive_assert(kit_response, 201, kit_body['name'])
 
-def test_create_kit_name_length_512():
-    kit_body = {"name": "Abcd" * 128}
-    negative_assert(kit_body)
+def test_kit_numbers():
+    kit_body = data.kit_bodies["numbers"]
+    kit_response = sender_stand_request.post_new_client_kit(kit_body)
+    positive_assert(kit_response, 201, kit_body['name'])
 
-def test_create_kit_name_special_chars():
-    kit_body = {"name": "!@#$%^&*()"}
-    positive_assert(kit_body)
+def test_kit_no_param():
+    kit_body = data.kit_bodies["no_param"]
+    kit_response = sender_stand_request.post_new_client_kit(kit_body)
+    negative_assert(kit_response, 400)
 
-def test_create_kit_name_with_spaces():
-    kit_body = {"name": " A Aaa "}
-    positive_assert(kit_body)
-
-def test_create_kit_name_with_numbers():
-    kit_body = {"name": "123"}
-    positive_assert(kit_body)
-
-def test_create_kit_no_name():
-    kit_body = {}
-    negative_assert(kit_body)
-
-def test_create_kit_name_as_number():
-    kit_body = {"name": 123}
-    negative_assert(kit_body)
+def test_kit_dif_param():
+    kit_body = data.kit_bodies["dif_param"]
+    kit_response = sender_stand_request.post_new_client_kit(kit_body)
+    negative_assert(kit_response, 400)
